@@ -1,0 +1,12 @@
+{
+  "name": "Apertei o Botão",
+  "short_name": "Apertei!",
+  "description": "Uma ideia brilhante. Uma utilidade duvidosa.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#15151f",
+  "theme_color": "#15151f",
+  "orientation": "portrait",
+  "lang": "pt-BR"
+}
