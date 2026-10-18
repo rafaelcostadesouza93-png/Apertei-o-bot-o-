@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#15151f">
+<title>Apertei o Botão</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;min-height:100vh;padding:25px 18px;
+ background:radial-gradient(circle at top,#33304c,#15151f 65%);
+ color:white;font-family:Arial,sans-serif;
+ display:flex;flex-direction:column;align-items:center;
+ text-align:center;justify-content:center
+}
+.logo{font-size:42px}
+h1{font-size:30px;margin:8px 0}
+.sub{color:#b9b8cb;font-size:14px;margin-bottom:28px}
+.stats{display:flex;gap:12px;margin-bottom:32px;width:100%;max-width:340px}
+.stat{background:#29283a;border:1px solid #444158;border-radius:15px;padding:13px 8px;flex:1}
+.num{font-size:24px;font-weight:bold;color:#ff626a}
+.caption{font-size:11px;color:#c4c2d4;margin-top:5px}
+#botao{
+ width:220px;height:220px;border-radius:50%;
+ border:8px solid #ff8589;background:linear-gradient(145deg,#ff525b,#d90e2b);
+ color:white;font-size:28px;font-weight:900;
+ box-shadow:0 12px 0 #8c1025,0 18px 35px #0008;
+ cursor:pointer;touch-action:manipulation;
+ transition:transform .12s,box-shadow .12s
+}
+#botao:active{transform:translateY(9px) scale(.97);box-shadow:0 3px 0 #8c1025}
+#botao.pop{animation:pop .25s}
+@keyframes pop{50%{transform:scale(1.07)}}
+#resposta{
+ width:100%;max-width:350px;min-height:88px;margin-top:34px;
+ padding:19px 15px;border-radius:17px;
+ background:#29283a;border:1px solid #454158;
+ font-size:18px;font-weight:bold;display:flex;
+ align-items:center;justify-content:center
+}
+#raridade{color:#ffd76b;font-size:12px;height:22px;margin-top:12px}
+.reset{margin-top:15px;border:1px solid #55516b;background:transparent;
+ color:#ccc9dc;padding:10px 16px;border-radius:20px}
+footer{color:#77758d;font-size:11px;margin-top:25px}
+</style>
+</head>
+<body>
+<div class="logo">🔴</div>
+<h1>Apertei o Botão</h1>
+<div class="sub">Uma ideia brilhante. Uma utilidade duvidosa.</div>
+
+<div class="stats">
+ <div class="stat"><div class="num" id="total">0</div><div class="caption">APERTOS</div></div>
+ <div class="stat"><div class="num" id="recorde">0</div><div class="caption">SEU RECORDE</div></div>
+</div>
+
+<button id="botao">APERTE!</button>
+<div id="resposta">Dizem que apertar esse botão muda tudo... 😂</div>
+<div id="raridade"></div>
+<button class="reset" id="reiniciar">Zerar contador</button>
+<footer>Sem anúncios. Sem sentido. Só apertos. 😂</footer>
+
+<script>
+const frases=[
+"Parabéns! Nada aconteceu. 😂",
+"Seu dedo trabalha mais que você!",
+"Erro 404: utilidade não encontrada.",
+"Você esperava o quê? KKKKK!",
+"Mais um segundo desperdiçado com sucesso!",
+"Nosso departamento de inutilidade agradece.",
+"Você desbloqueou... absolutamente nada! 🏆",
+"URGENTE: botão continua sendo botão!",
+"Calma, estamos fingindo que trabalhamos.",
+"Você é oficialmente um apertador profissional!",
+"Boa notícia: não temos notícias.",
+"Toque novamente. Vai que... não vai. 😂",
+"Seu prêmio é a satisfação de apertar!",
+"Este botão acredita em você. Mais ou menos.",
+"Parabéns por chegar até aqui sem motivo!",
+"Seu polegar merece férias.",
+"Estamos quase chegando a lugar nenhum!",
+"Você acaba de promover o botão a gerente.",
+"Mais um clique que entrará para a história de coisa nenhuma.",
+"Obrigado por financiar nossa falta de utilidade!"
+];
+const raras=[
+"✨ MENSAGEM RARA: Você é uma lenda da inutilidade!",
+"🏆 CONQUISTA: Mestre dos apertos desbloqueado!",
+"👽 O botão recebeu uma mensagem de outro planeta. Era spam.",
+"💎 ULTRARRARA: Você encontrou... nada especial!",
+"🎉 PARABÉNS! Este é oficialmente um dos momentos da sua vida!"
+];
+let total=0,recorde=0,anterior=-1;
+try{
+ total=Number(localStorage.getItem("ab_total"))||0;
+ recorde=Number(localStorage.getItem("ab_recorde"))||0;
+}catch(e){}
+function atualizar(){
+ document.getElementById("total").textContent=total;
+ document.getElementById("recorde").textContent=recorde;
+}
+document.getElementById("botao").addEventListener("click",function(){
+ total++;
+ if(total>recorde)recorde=total;
+ let rara=Math.random()<0.09;
+ let texto;
+ if(rara){
+  texto=raras[Math.floor(Math.random()*raras.length)];
+  document.getElementById("raridade").textContent="✨ EVENTO ESPECIAL ✨";
+ }else{
+  let i;
+  do{i=Math.floor(Math.random()*frases.length)}while(i===anterior);
+  anterior=i;texto=frases[i];
+  document.getElementById("raridade").textContent="";
+ }
+ document.getElementById("resposta").textContent=texto;
+ this.classList.remove("pop");
+ void this.offsetWidth;
+ this.classList.add("pop");
+ try{
+  localStorage.setItem("ab_total",total);
+  localStorage.setItem("ab_recorde",recorde);
+ }catch(e){}
+ atualizar();
+});
+document.getElementById("reiniciar").addEventListener("click",function(){
+ if(confirm("Quer zerar seu contador? Seu recorde será mantido.")){
+  total=0;
+  try{localStorage.setItem("ab_total",0)}catch(e){}
+  atualizar();
+  document.getElementById("resposta").textContent="Contador zerado. Sua inutilidade recomeça agora! 😂";
+  document.getElementById("raridade").textContent="";
+ }
+});
+atualizar();
+</script>
+</body>
+</html>
